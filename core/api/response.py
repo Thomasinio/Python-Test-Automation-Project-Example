@@ -1,5 +1,3 @@
-from pprint import pformat
-
 from core.api.enums.global_enums import GlobalErrorMessages
 
 
@@ -32,6 +30,4 @@ class Response:
         self.__dict__.update(parsed_object.dict())
 
     def __repr__(self):
-        return pformat({"Response URL": self.response_url,
-                        "Response status code": self.response_status_code,
-                        "Response JSON body": self.response_json})
+        return f"Response({self.response_url}, {self.response_status_code}, {self.response_json})"

@@ -19,15 +19,18 @@ class ApiClient:
         self.base_url = furl(base_url)
         self.session = Session()
         self.session.hooks["response"] = response_logging_hook
+        self.raise_for_status = raise_for_status
 
     def get(self, path="/", params=None):
         url = self.base_url / path
         response = self.session.get(url, params=params)
-        response.raise_for_status()
+        if self.raise_for_status:
+            response.raise_for_status()
         return Response(response)
 
     def post(self, path="/", data=None, json=None):
         url = self.base_url / path
         response = self.session.post(url, data, json)
-        response.raise_for_status()
+        if self.raise_for_status:
+            response.raise_for_status()
         return Response(response)
