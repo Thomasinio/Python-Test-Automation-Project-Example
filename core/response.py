@@ -1,15 +1,13 @@
 from typing import TypeVar, Union, List
 from pydantic.main import ModelMetaclass
 from requests import Response as RequestsResponse
-from core.api.enums.global_enums import GlobalErrorMessages
+from core.enums.global_enums import GlobalErrorMessages
 
 Self = TypeVar('Self', bound='Response')
 
 
 class Response:
-    """
 
-    """
     def __init__(self, response: RequestsResponse) -> None:
         self.response = response
         self.response_url = response.url

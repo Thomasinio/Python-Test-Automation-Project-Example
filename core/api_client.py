@@ -3,7 +3,8 @@ from loguru import logger
 from pprint import pformat
 from requests import Session, Response as RequestsResponse
 
-from urls import SERVICE_URL
+from urls import AUTH0_HOST, SERVICE_URL
+from .models.auth import AuthDataModel, AuthResponseModel
 from .response import Response
 
 
@@ -18,15 +19,19 @@ def response_logging_hook(response: RequestsResponse, *args, **kwargs) -> None:
 
 
 class ApiClient:
-    """
-    Simplified API client
-    Initialized with the base URL to which requests will go
-    """
+
     def __init__(self, base_url: str = SERVICE_URL) -> None:
         self.base_url = furl(base_url)
         self.session = Session()
         # list of functions that are called after every response
         self.session.hooks["response"] = [check_for_error, response_logging_hook]
+
+    def authorize(self, auth_data=AuthDataModel()):
+        url = AUTH0_HOST
+        token = AuthResponseModel(**self.session.post(url, data=auth_data.dict()).json())
+        self.session.headers["Client-ID"] = "qg705rudhk2h7yztnasre9v727ub1p"
+        self.session.headers["Authorization"] = f"{token.token_type.capitalize()} {token.access_token}"
+        return self
 
     def get(self, path: str = "/", params=None) -> Response:
         url = self.base_url / path

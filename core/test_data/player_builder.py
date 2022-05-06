@@ -1,4 +1,4 @@
-from core.api.enums.global_enums import Statuses
+from core.enums.global_enums import Statuses
 
 
 class PlayerBuilder:
