@@ -33,7 +33,7 @@ class ResponseValidator:
             self.__extend_object_attributes_with(parsed_object)
         return self
 
-    def __extend_object_attributes_with(self, parsed_object: ModelMetaclass) -> None:
+    def __extend_object_attributes_with(self, parsed_object: ModelMetaclass) -> Self:
         """
         The method provides attribute style access to a response body
         Instead of annoying:
@@ -42,6 +42,7 @@ class ResponseValidator:
         >>> self.response_json.books[-1].name
         """
         self.__dict__.update(parsed_object.dict())
+        return self
 
     def __repr__(self) -> str:
         return f"Response({self.response_url}, {self.response_status_code}, {self.response_json})"

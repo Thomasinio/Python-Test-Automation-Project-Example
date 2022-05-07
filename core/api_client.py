@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, Optional, Any, Dict
 
 from furl import furl
 from loguru import logger
@@ -37,12 +37,12 @@ class ApiClient:
         self.session.headers["Authorization"] = f"{token.token_type.capitalize()} {token.access_token}"
         return self
 
-    def get(self, path: str = "/", params=None) -> ResponseValidator:
+    def get(self, path: str = "/", params: Dict[str, Any] = None) -> ResponseValidator:
         url = self.base_url / path
         response = self.session.get(url, params=params)
         return ResponseValidator(response)
 
-    def post(self, path: str = "/", data=None, json=None) -> ResponseValidator:
+    def post(self, path: str = "/", data: Optional[Any] = None, json: Optional[Any] = None) -> ResponseValidator:
         url = self.base_url / path
         response = self.session.post(url, data, json)
         return ResponseValidator(response)
