@@ -5,6 +5,7 @@ from loguru import logger
 from pprint import pformat
 from requests import Session, Response
 
+from .game_api_client import GameApiClient
 from .response_validator import ResponseValidator
 from .models.auth import AuthDataModel, AuthResponseModel
 from core.configs.main_configuration import SERVICE_HOST, AUTH0_HOST, AUTH0_CLIENT_ID
@@ -30,6 +31,7 @@ class ApiClient:
         self.session = Session()
         # List of functions that are called after every response
         self.session.hooks["response"] = [check_for_error, response_logging_hook]
+        self.games = GameApiClient(client=self)
 
     def authorize(self, auth_data: AuthDataModel = AuthDataModel()) -> Self:
         url = AUTH0_HOST
