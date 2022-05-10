@@ -1,12 +1,13 @@
 from core.api_client import ApiClient
-from core.models.post import PostModel
+from core.models.game import GameModel
 
 client = ApiClient().authorize()
 
 
 def test_1():
-    response = client.post(path="/games/", data='search "zelda"; where rating >= 80 & release_dates.date > 631152000;')
-    response.assert_status_code(200)
+    response = client.post(path="/games/", data='fields *; search "Max Payne";')
+    response.assert_status_code(200).validate(GameModel)
+    print(response.items[0])
 
 
 # def test_1():
