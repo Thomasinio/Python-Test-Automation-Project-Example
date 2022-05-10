@@ -15,6 +15,7 @@ class ResponseValidator:
         self.response_url = response.url
         self.response_json = response.json()
         self.response_status_code = response.status_code
+        self.items = list()
 
     def assert_status_code(self, status_code: Union[int, List[int]]) -> Self:
         if isinstance(status_code, list):
@@ -27,21 +28,10 @@ class ResponseValidator:
         if isinstance(self.response_json, list):
             for item in self.response_json:
                 parsed_object = model.parse_obj(item)
-                self.__extend_object_attributes_with(parsed_object)
+                self.items.append(parsed_object)
         else:
             parsed_object = model.parse_obj(self.response_json)
-            self.__extend_object_attributes_with(parsed_object)
-        return self
-
-    def __extend_object_attributes_with(self, parsed_object: ModelMetaclass) -> Self:
-        """
-        The method provides attribute style access to a response body
-        Instead of annoying:
-        >>> self.response_json["books"][-1]["name"]
-        We can simply write:
-        >>> self.response_json.books[-1].name
-        """
-        self.__dict__.update(parsed_object.dict())
+            self.items.append(parsed_object)
         return self
 
     def __repr__(self) -> str:

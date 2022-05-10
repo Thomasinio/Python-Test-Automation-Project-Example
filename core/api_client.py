@@ -12,6 +12,7 @@ from core.configs.main_configuration import SERVICE_HOST, AUTH0_HOST, AUTH0_CLIE
 Self = TypeVar('Self', bound='ApiClient')
 
 
+@logger.catch
 def check_for_error(response: Response, *args, **kwargs) -> None:
     response.raise_for_status()
 

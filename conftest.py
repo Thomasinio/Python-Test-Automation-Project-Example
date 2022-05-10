@@ -1,6 +1,15 @@
 import pytest
 from pathlib import Path
 from loguru import logger
+from core.api_client import ApiClient
+from core.game_api_client import GameApiClient
+
+
+@pytest.fixture(scope="session")
+def authorized_game_api_client():
+    authorized_api_client = ApiClient().authorize()
+    authorized_game_api_client = GameApiClient(authorized_api_client)
+    yield authorized_game_api_client
 
 
 @pytest.fixture(autouse=True)
