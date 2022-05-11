@@ -13,6 +13,7 @@ class ResponseValidator:
         self.response_url = response.url
         self.response_json = response.json()
         self.response_status_code = response.status_code
+        # list() always creates a new object on the heap, but [] can reuse memory cells in many situations
         self.items = list()
 
     def assert_status_code(self, status_code: Union[int, List[int]]):
