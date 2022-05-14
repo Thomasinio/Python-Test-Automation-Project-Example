@@ -1,1 +1,2 @@
-# Python-Test-Automation-Template
+# Python-API-Test-Automation-Example
+
