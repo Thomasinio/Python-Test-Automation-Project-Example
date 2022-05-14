@@ -1,9 +1,11 @@
+import allure
 import pytest
 
 from core.models.game import GameModel
 from core.test_data.query_builder import QueryBuilder
 
 
+@allure.description("test")
 @pytest.mark.parametrize("game_name", ["Max Payne"])
 def test_name(authorized_api_client, game_name):
     client = authorized_api_client
@@ -30,5 +32,4 @@ def test_rating(authorized_api_client, game_name):
     result1 = [game.id for game in response1.items
                if game.rating is not None and game.rating > 80]
     result2 = [game.id for game in response2.items]
-    result2.append(123)
     assert result1 == result2, "Wrong elements"
