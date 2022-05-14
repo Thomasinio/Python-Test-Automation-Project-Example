@@ -1,15 +1,16 @@
-from pydantic import BaseModel, conlist
+from uuid import UUID
+from pydantic import BaseModel, PositiveInt, HttpUrl, conint, conlist
 
 
 class GameModel(BaseModel):
-    id: int
-    category: int
-    created_at: int
+    id: PositiveInt
+    category: conint(ge=0)
+    created_at: PositiveInt
     name: str
     slug: str
-    updated_at: int
-    url: str
-    checksum: str
+    updated_at: PositiveInt
+    url: HttpUrl
+    checksum: UUID
 
     age_ratings: conlist(int, min_items=1) = None
     aggregated_rating: float = None

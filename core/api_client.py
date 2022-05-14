@@ -9,7 +9,7 @@ from .models.auth import AuthDataModel, AuthResponseModel
 from core.configs.main_configuration import SERVICE_HOST, AUTH0_HOST, AUTH0_CLIENT_ID
 
 
-@logger.catch
+@logger.catch(reraise=True)
 def check_for_error(response: Response, *args, **kwargs):
     response.raise_for_status()
 

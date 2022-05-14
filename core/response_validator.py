@@ -1,9 +1,9 @@
-from typing import Union, List
+from pprint import pformat
+from typing import Union, List, Dict
 
+from loguru import logger
 from requests import Response
-from pydantic.main import ModelMetaclass
-
-from core.enums.global_enums import GlobalErrorMessages
+from pydantic.main import ModelMetaclass, ValidationError
 
 
 class ResponseValidator:
@@ -16,22 +16,30 @@ class ResponseValidator:
         # list() always creates a new object on the heap, but [] can reuse memory cells in many situations
         self.items = list()
 
+    @logger.catch(reraise=True)
     def assert_status_code(self, status_code: Union[int, List[int]]):
         if isinstance(status_code, list):
-            assert self.response_status_code in status_code, GlobalErrorMessages.WRONG_STATUS_CODE.value
+            assert self.response_status_code in status_code
         else:
-            assert self.response_status_code == status_code, GlobalErrorMessages.WRONG_STATUS_CODE.value
+            assert self.response_status_code == status_code
         return self
 
     def validate(self, model: ModelMetaclass):
         if isinstance(self.response_json, list):
             for item in self.response_json:
-                parsed_object = model.parse_obj(item)
-                self.items.append(parsed_object)
+                self.__model_parsing_process(model, item)
         else:
-            parsed_object = model.parse_obj(self.response_json)
-            self.items.append(parsed_object)
+            self.__model_parsing_process(model, self.response_json)
         return self
+
+    def __model_parsing_process(self, model: ModelMetaclass, item: Union[List, Dict]):
+        try:
+            parsed_object = model.parse_obj(item)
+            self.items.append(parsed_object)
+        except ValidationError:
+            # "Loguru will automatically add the traceback of occurring exception while using logger.exception()"
+            logger.exception("\n" + pformat(item))
+            raise
 
     def __repr__(self):
         return f"Response({self.response_url}, {self.response_status_code}, {self.response_json})"

@@ -31,5 +31,5 @@ def write_logs(request):
 
     # enable the logger
     logger.remove()
-    logger.configure(handlers=[{"sink": log_path, "level": "TRACE", "mode": "w"}])
+    logger.configure(handlers=[{"sink": log_path, "level": "TRACE", "mode": "w", "backtrace": False}])
     logger.enable("my_package")
