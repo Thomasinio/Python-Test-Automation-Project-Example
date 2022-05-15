@@ -5,7 +5,6 @@ from core.models.game import GameModel
 from core.test_data.query_builder import QueryBuilder
 
 
-@allure.description("test")
 @pytest.mark.parametrize("game_name", ["Max Payne"])
 def test_name(authorized_api_client, game_name):
     client = authorized_api_client
@@ -13,7 +12,8 @@ def test_name(authorized_api_client, game_name):
 
     response = client.games.get_info(query_builder)
     response.assert_status_code(200).validate(GameModel)
-    assert all([game.name.startswith(game_name) for game in response.items])
+    with allure.step(f"Check that all game names from the response starts with {game_name}"):
+        assert all([game.name.startswith(game_name) for game in response.items])
 
 
 @pytest.mark.parametrize("game_name", ["Max Payne"])

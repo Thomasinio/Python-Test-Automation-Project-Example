@@ -16,11 +16,13 @@ def pytest_runtest_makereport(item, call):
     setattr(item, "rep_" + rep.when, rep)
 
 
+@allure.title("Get authorized API client")
 @pytest.fixture(scope="session")
 def authorized_api_client():
     yield ApiClient().authorize()
 
 
+@allure.title("Write log files")
 @pytest.fixture(autouse=True)
 def write_logs(request):
     # put logs in tests/logs
