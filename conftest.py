@@ -12,9 +12,7 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
 
-    # set a report attribute for each phase of a call, which can
-    # be "setup", "call", "teardown"
-
+    # Set a report attribute for each phase of a call, which can be "setup", "call", "teardown"
     setattr(item, "rep_" + rep.when, rep)
 
 
@@ -50,5 +48,5 @@ def write_logs(request):
 
     yield
 
-    if request.node.rep_setup.failed:
+    if request.node.rep_call.failed:
         allure.attach.file(log_path, "Logs", allure.attachment_type.TEXT)
