@@ -1,18 +1,35 @@
 import pytest
+import allure
 from pathlib import Path
 from loguru import logger
+
 from core.api_client import ApiClient
 
 
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    # execute all other hooks to obtain the report object
+    outcome = yield
+    rep = outcome.get_result()
+
+    # Set a report attribute for each phase of a call, which can be "setup", "call", "teardown"
+    setattr(item, "rep_" + rep.when, rep)
+
+
+def pytest_exception_interact(report):
+    logger.error(f'Test exception:\n{report.longreprtext}')
+
+@allure.title("Get authorized API client")
 @pytest.fixture(scope="session")
 def authorized_api_client():
     yield ApiClient().authorize()
 
 
+@allure.title("Write log files")
 @pytest.fixture(autouse=True)
 def write_logs(request):
     # put logs in tests/logs
-    log_path = Path("tests") / "logs"
+    log_path = Path("logs")
 
     # tidy logs in subdirectories based on test module and class names
     module = request.module
@@ -33,3 +50,8 @@ def write_logs(request):
     logger.remove()
     logger.configure(handlers=[{"sink": log_path, "level": "TRACE", "mode": "w", "backtrace": False}])
     logger.enable("my_package")
+
+    yield
+
+    if request.node.rep_call.failed:
+        allure.attach.file(log_path, "Logs", allure.attachment_type.TEXT)

@@ -1,3 +1,4 @@
+import allure
 import pytest
 
 from core.models.game import GameModel
@@ -11,7 +12,8 @@ def test_name(authorized_api_client, game_name):
 
     response = client.games.get_info(query_builder)
     response.assert_status_code(200).validate(GameModel)
-    assert all([game.name.startswith(game_name) for game in response.items])
+    with allure.step(f"Check that all game names from the response starts with {game_name}"):
+        assert all([game.name.startswith(game_name) for game in response.items])
 
 
 @pytest.mark.parametrize("game_name", ["Max Payne"])
@@ -30,5 +32,4 @@ def test_rating(authorized_api_client, game_name):
     result1 = [game.id for game in response1.items
                if game.rating is not None and game.rating > 80]
     result2 = [game.id for game in response2.items]
-    result2.append(123)
     assert result1 == result2, "Wrong elements"

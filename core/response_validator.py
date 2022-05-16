@@ -27,17 +27,17 @@ class ResponseValidator:
     def validate(self, model: ModelMetaclass):
         if isinstance(self.response_json, list):
             for item in self.response_json:
-                self.__model_parsing_process(model, item)
+                self._model_parsing_process(model, item)
         else:
-            self.__model_parsing_process(model, self.response_json)
+            self._model_parsing_process(model, self.response_json)
         return self
 
-    def __model_parsing_process(self, model: ModelMetaclass, item: Union[List, Dict]):
+    def _model_parsing_process(self, model: ModelMetaclass, item: Union[List, Dict]):
         try:
             parsed_object = model.parse_obj(item)
             self.items.append(parsed_object)
         except ValidationError:
-            # "Loguru will automatically add the traceback of occurring exception while using logger.exception()"
+            # Loguru will automatically add the traceback of occurring exception while using logger.exception()
             logger.exception("\n" + pformat(item))
             raise
 
