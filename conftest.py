@@ -16,6 +16,9 @@ def pytest_runtest_makereport(item, call):
     setattr(item, "rep_" + rep.when, rep)
 
 
+def pytest_exception_interact(report):
+    logger.error(f'Test exception:\n{report.longreprtext}')
+
 @allure.title("Get authorized API client")
 @pytest.fixture(scope="session")
 def authorized_api_client():
