@@ -6,7 +6,7 @@ from requests import Session, Response
 from .game_api_client import GameApiClient
 from .response_validator import ResponseValidator
 from .models.auth import AuthDataModel, AuthResponseModel
-from core.configs.main_configuration import SERVICE_HOST, AUTH0_HOST, AUTH0_CLIENT_ID
+from src.configs.main_configuration import SERVICE_HOST, AUTH0_HOST, AUTH0_CLIENT_ID
 
 
 def check_for_error(response: Response, *args, **kwargs):

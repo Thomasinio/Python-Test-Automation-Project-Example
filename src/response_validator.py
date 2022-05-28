@@ -11,6 +11,7 @@ class ResponseValidator:
     def __init__(self, response: Response):
         self.response = response
         self.response_url = response.url
+        # response.request.body?
         self.response_json = response.json()
         self.response_status_code = response.status_code
         # list() always creates a new object on the heap, but [] can reuse memory cells in many situations
@@ -34,6 +35,7 @@ class ResponseValidator:
     def _model_parsing_process(self, model: ModelMetaclass, item: Union[List, Dict]):
         try:
             parsed_object = model.parse_obj(item)
+            # annoying
             self.items.append(parsed_object)
         except ValidationError:
             # Loguru will automatically add the traceback of occurring exception while using logger.exception()
@@ -41,4 +43,5 @@ class ResponseValidator:
             raise
 
     def __repr__(self):
+        # self = Response(https://api.igdb.com/v4/games, 200, [{'id': 19, 'age_ratings': [519, 47525], ...}])
         return f"Response({self.response_url}, {self.response_status_code}, {self.response_json})"

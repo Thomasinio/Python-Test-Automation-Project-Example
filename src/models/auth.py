@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from core.configs.main_configuration import AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_GRANT_TYPE
+from src.configs.main_configuration import AUTH0_CLIENT_ID, AUTH0_CLIENT_SECRET, AUTH0_GRANT_TYPE
 
 
 class AuthDataModel(BaseModel):
