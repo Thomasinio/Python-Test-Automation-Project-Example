@@ -16,7 +16,6 @@ class ResponseValidator:
         # list() always creates a new object on the heap, but [] can reuse memory cells in many situations
         self.items = list()
 
-    @logger.catch(reraise=True)
     def assert_status_code(self, status_code: Union[int, List[int]]):
         if isinstance(status_code, list):
             assert self.response_status_code in status_code
