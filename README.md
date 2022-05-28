@@ -12,23 +12,22 @@ It can also help beginners and not quite beginner automation engineers to get ri
  * How to validate response?
  * How to add logging?
  * How to implement a reporting mechanism?
-
-
-    .
-    ├── src                    
-    │   ├── configs          
-    │   ├── enums         
-    │   ├── models
-    │   └── test_data   
-    ├── tests                    
-    │   ├── allure_results          
-    │   └── logs         
-    ├── .gitignore
-    ├── conftest.py
-    ├── pytest.ini
-    ├── README.md
-    └── requirements.txt
-
+```
+.
+├── src                    
+│   ├── configs          
+│   ├── enums         
+│   ├── models
+│   └── test_data   
+├── tests                    
+│   ├── allure_results          
+│   └── logs         
+├── .gitignore
+├── conftest.py
+├── pytest.ini
+├── README.md
+└── requirements.txt
+```
 ## Technologies
 Project is created with:
 * Lorem version: 12.3
