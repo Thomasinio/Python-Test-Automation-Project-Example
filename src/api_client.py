@@ -6,10 +6,11 @@ from requests import Session, Response
 from .game_api_client import GameApiClient
 from .response_validator import ResponseValidator
 from .models.auth import AuthDataModel, AuthResponseModel
-from src.configs.main_configuration import SERVICE_HOST, AUTH0_HOST, AUTH0_CLIENT_ID
+from src.configs.main_configuration import SERVICE_HOST, AUTH0_HOST, AUTH0_CLIENT_ID, TIMEOUT_THRESHOLD
 
 
 def check_for_error(response: Response, *args, **kwargs):
+    """Each response is checked that the response HTTP status code is not a 4xx or a 5xx"""
     response.raise_for_status()
 
 
@@ -30,17 +31,17 @@ class ApiClient:
 
     def authorize(self, auth_data: AuthDataModel = AuthDataModel()):
         url = AUTH0_HOST
-        token = AuthResponseModel(**self.session.post(url, data=auth_data.dict()).json())
+        token = AuthResponseModel(**self.session.post(url, data=auth_data.dict(), timeout=TIMEOUT_THRESHOLD).json())
         self.session.headers["Client-ID"] = AUTH0_CLIENT_ID
         self.session.headers["Authorization"] = f"{token.token_type.capitalize()} {token.access_token}"
         return self
 
     def get(self, path="/", params=None):
         url = self.base_url / path
-        response = self.session.get(url, params=params)
+        response = self.session.get(url, params=params, timeout=TIMEOUT_THRESHOLD)
         return ResponseValidator(response)
 
     def post(self, path="/", data=None, json=None):
         url = self.base_url / path
-        response = self.session.post(url, data, json)
+        response = self.session.post(url, data, json, timeout=TIMEOUT_THRESHOLD)
         return ResponseValidator(response)
