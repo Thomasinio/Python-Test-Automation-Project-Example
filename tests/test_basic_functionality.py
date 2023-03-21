@@ -12,7 +12,7 @@ def test_name(authorized_api_client, game_name):
     query_builder = QueryBuilder().select_fields().search(game_name).build()
 
     response = client.games.get_info(query_builder)
-    response.assert_status_code([200, 201]).validate(GameModel)
+    response.assert_status_code(200).assert_headers({"Content-Type": "application/json"}).validate(GameModel)
     with allure.step(f"Check that all game names from the response starts with {game_name}"):
         assert all([game.name.title().startswith(game_name) for game in response.items])
 

@@ -17,9 +17,10 @@ class ResponseValidator:
         # list() always creates a new object on the heap, but [] can reuse memory cells in many situations
         self.items = list()
 
-    def assert_headers(self, header: str, value: str):
-        assert header in self.response_headers, f"Header {header} not found in response headers: {self.response_headers}"
-        assert self.response_headers[header] == value, f"Header {header} has value: {self.response_headers[header]}, expected: {value}"
+    def assert_headers(self, headers: dict):
+        for header, value in headers.items():
+            assert header in self.response_headers, f"Header {header} not found in response headers: {self.response_headers}"
+            assert self.response_headers[header] == value, f"Header {header} has value: {self.response_headers[header]}, expected: {value}"
         return self
 
     def assert_status_code(self, status_code: Union[int, List[int]]):
