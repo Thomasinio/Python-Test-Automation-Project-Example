@@ -3,35 +3,29 @@ import allure
 from pathlib import Path
 from loguru import logger
 
-from core.api_client import ApiClient
+from src.api_client import ApiClient
+
+
+def pytest_exception_interact(report):
+    logger.exception(f"Test exception:\n{report.longreprtext}")
 
 
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
-    # execute all other hooks to obtain the report object
+    # Execute all other hooks to obtain the report object
     outcome = yield
     rep = outcome.get_result()
-
     # Set a report attribute for each phase of a call, which can be "setup", "call", "teardown"
     setattr(item, "rep_" + rep.when, rep)
-
-
-def pytest_exception_interact(report):
-    logger.error(f'Test exception:\n{report.longreprtext}')
-
-@allure.title("Get authorized API client")
-@pytest.fixture(scope="session")
-def authorized_api_client():
-    yield ApiClient().authorize()
 
 
 @allure.title("Write log files")
 @pytest.fixture(autouse=True)
 def write_logs(request):
-    # put logs in tests/logs
+    # Put logs in tests/logs
     log_path = Path("logs")
 
-    # tidy logs in subdirectories based on test module and class names
+    # Tidy logs in subdirectories based on test module and class names
     module = request.module
     class_ = request.cls
     name = request.node.name + ".log"
@@ -43,10 +37,10 @@ def write_logs(request):
 
     log_path.mkdir(parents=True, exist_ok=True)
 
-    # append last part of the name
+    # Append last part of the name
     log_path /= name
 
-    # enable the logger
+    # Enable the logger
     logger.remove()
     logger.configure(handlers=[{"sink": log_path, "level": "TRACE", "mode": "w", "backtrace": False}])
     logger.enable("my_package")
@@ -55,3 +49,9 @@ def write_logs(request):
 
     if request.node.rep_call.failed:
         allure.attach.file(log_path, "Logs", allure.attachment_type.TEXT)
+
+
+@allure.title("Get authorized API client")
+@pytest.fixture(scope="session")
+def authorized_api_client():
+    yield ApiClient().authorize()

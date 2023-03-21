@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from loguru import logger
 
 
@@ -18,11 +18,11 @@ class QueryBuilder:
         self.result.append(f"search \"{name}\";")
         return self
 
-    def where_rating_less_than(self, value):
+    def where_rating_less_than(self, value: Union[str, int]):
         self.result.append(f"where rating < {value};")
         return self
 
-    def where_rating_more_than(self, value):
+    def where_rating_more_than(self, value: Union[str, int]):
         self.result.append(f"where rating > {value};")
         return self
 
