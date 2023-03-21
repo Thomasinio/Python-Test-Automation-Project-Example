@@ -6,6 +6,12 @@ from loguru import logger
 from src.api_client import ApiClient
 
 
+@allure.title("Get authorized API client")
+@pytest.fixture(scope="session")
+def authorized_api_client():
+    yield ApiClient().authorize()
+
+
 def pytest_exception_interact(report):
     logger.exception(f"Test exception:\n{report.longreprtext}")
 
@@ -49,9 +55,3 @@ def write_logs(request):
 
     if request.node.rep_call.failed:
         allure.attach.file(log_path, "Logs", allure.attachment_type.TEXT)
-
-
-@allure.title("Get authorized API client")
-@pytest.fixture(scope="session")
-def authorized_api_client():
-    yield ApiClient().authorize()
