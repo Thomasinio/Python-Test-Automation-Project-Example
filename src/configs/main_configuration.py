@@ -25,4 +25,4 @@ The first element, `connection_timeout`, represents the maximum time allowed for
 The second element, `data_read_timeout`, represents the maximum time allowed for receiving a response from the server, 
 once a connection has been established.
 """
-TIMEOUT_THRESHOLD = make_namedtuple("TimeoutThreshold", connection_timeout=5, data_read_timeout=10)
+TIMEOUT_THRESHOLD = make_namedtuple("TimeoutThreshold", connection_timeout=0.5, data_read_timeout=5)
