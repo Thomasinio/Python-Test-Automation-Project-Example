@@ -23,8 +23,7 @@ class ApiClient:
             setattr(self.session, key, value)
 
     def authorize(self, auth_data: AuthDataModel = AuthDataModel()):
-        url = AUTH0_HOST
-        token = AuthResponseModel(**self.post(url, data=auth_data.dict()).response_json)
+        token = AuthResponseModel(**self.post(url=AUTH0_HOST, data=auth_data.dict()).response_json)
         self.session.headers["Client-ID"] = AUTH0_CLIENT_ID
         self.session.headers["Authorization"] = f"{token.token_type.capitalize()} {token.access_token}"
         return self
