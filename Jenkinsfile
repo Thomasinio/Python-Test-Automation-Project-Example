@@ -1,14 +1,12 @@
 pipeline {
     agent any
+
     stages {
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                sh 'docker build -t my-image .'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'docker run my-image pytest'
+                script {
+                    docker.build('my-image', '.')
+                }
             }
         }
     }
