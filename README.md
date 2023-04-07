@@ -45,5 +45,11 @@ To get started with this project, you'll need to do the following:
 4. Run the tests using the command `pytest -v`.
 That's it! With these simple steps, you should be able to run the example tests and see how they work. Feel free to modify the code and experiment with different test scenarios to see how they affect the test results.
 
+TEMP
+ * docker build -t py_test_auto_project .
+ * docker run --env-file .env -p 5050:8080 --rm py_test_auto_project
+ * On the host machine go to localhost:5050
+
+
 
 
